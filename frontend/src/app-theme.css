@@ -1,0 +1,286 @@
+.app-theme-root {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #172033;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.app-theme-root.app-theme-dark {
+  background: #0b1220;
+  color: #e5e7ef;
+  color-scheme: dark;
+}
+
+.app-theme-root.app-theme-dark .task-form-page {
+  --task-ink: #edf0f7;
+  --task-muted: #a1a9ba;
+  --task-border: #283449;
+  background: #0b1220;
+  color: #e5e7ef;
+}
+
+.app-theme-root.app-theme-dark .task-form-back {
+  color: #b0b7c6 !important;
+}
+
+.app-theme-root.app-theme-dark .task-form-back:hover {
+  background: #1c2740 !important;
+  color: #c4b5fd !important;
+}
+
+.app-theme-root.app-theme-dark .task-form-heading-icon,
+.app-theme-root.app-theme-dark .form-section-number {
+  border-color: #3c3565;
+  background: #252044;
+  color: #b8a9ff;
+}
+
+.app-theme-root.app-theme-dark .task-form-eyebrow,
+.app-theme-root.app-theme-dark .form-section-title,
+.app-theme-root.app-theme-dark .task-tip-title,
+.app-theme-root.app-theme-dark .task-summary-heading,
+.app-theme-root.app-theme-dark .priority-option-top {
+  color: #e4e7f0;
+}
+
+.app-theme-root.app-theme-dark .task-form-subtitle,
+.app-theme-root.app-theme-dark .form-section-caption,
+.app-theme-root.app-theme-dark .task-field-label > span,
+.app-theme-root.app-theme-dark .task-input-helper .MuiTypography-root,
+.app-theme-root.app-theme-dark .priority-description,
+.app-theme-root.app-theme-dark .task-tip-copy,
+.app-theme-root.app-theme-dark .task-summary-row > span,
+.app-theme-root.app-theme-dark .task-form-help,
+.app-theme-root.app-theme-dark .task-form-help .MuiTypography-root {
+  color: #9aa4b7;
+}
+
+.app-theme-root.app-theme-dark .form-section-separated,
+.app-theme-root.app-theme-dark .task-form-actions,
+.app-theme-root.app-theme-dark .task-summary-heading {
+  border-color: #283449;
+}
+
+.app-theme-root.app-theme-dark .task-field-label {
+  color: #d6dbe6;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiOutlinedInput-root,
+.app-theme-root.app-theme-dark .task-form-select .MuiOutlinedInput-root {
+  background: #111b2b;
+  color: #e5e7ef;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiOutlinedInput-notchedOutline,
+.app-theme-root.app-theme-dark .task-form-select .MuiOutlinedInput-notchedOutline {
+  border-color: #344158;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+.app-theme-root.app-theme-dark .task-form-select .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #7664bd;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiOutlinedInput-root.Mui-focused,
+.app-theme-root.app-theme-dark .task-form-select .MuiOutlinedInput-root.Mui-focused {
+  background: #121c2c;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.app-theme-root.app-theme-dark .task-form-select .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #a08af6;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiInputBase-input::placeholder {
+  color: #7e899e;
+}
+
+.app-theme-root.app-theme-dark .task-form-input .MuiInputAdornment-root,
+.app-theme-root.app-theme-dark .task-form-select .MuiInputAdornment-root {
+  color: #9ca6b9;
+}
+
+.app-theme-root.app-theme-dark .task-form-input input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.app-theme-root.app-theme-dark .priority-option {
+  border-color: #303c53;
+  background: #111b2b;
+  color: #d6dbe6;
+}
+
+.app-theme-root.app-theme-dark .priority-option:hover {
+  border-color: #63549e;
+  background: #171f33;
+}
+
+.app-theme-root.app-theme-dark .priority-option.is-selected {
+  border-color: #8874dc;
+  background: #211d3d;
+}
+
+.app-theme-root.app-theme-dark .task-tip-card {
+  border-color: #373153;
+  background: linear-gradient(145deg, #17182a 0%, #211d39 100%);
+}
+
+.app-theme-root.app-theme-dark .task-tip-icon {
+  background: #302852;
+  color: #b3a3ff;
+}
+
+.app-theme-root.app-theme-dark .task-tip-eyebrow,
+.app-theme-root.app-theme-dark .task-summary-heading > span {
+  color: #aa9bf1;
+}
+
+.app-theme-root.app-theme-dark .task-summary-card,
+.app-theme-root.app-theme-dark .task-form-help {
+  border-color: #283449;
+  background: #111b2b;
+}
+
+.app-theme-root.app-theme-dark .task-summary-row > strong {
+  color: #d6dbe6;
+}
+
+.app-theme-root.app-theme-dark .task-summary-row > span > svg,
+.app-theme-root.app-theme-dark .task-form-help > svg {
+  color: #a2abc0;
+}
+
+.app-theme-root.app-theme-dark .task-cancel-button {
+  border-color: #3a455b !important;
+  color: #c4cad6 !important;
+}
+
+.app-theme-root.app-theme-dark .task-cancel-button:hover {
+  border-color: #66599e !important;
+  background: #1c2436 !important;
+}
+
+.app-theme-root.app-theme-dark .task-form-actions {
+  background: #0b1220ed;
+}
+
+.app-theme-root.app-theme-dark .login-page {
+  background: #0b1220;
+  color: #e5e7ef;
+}
+
+.app-theme-root.app-theme-dark .login-main {
+  background:
+    radial-gradient(ellipse at 50% 8%, #252040 0, transparent 30rem),
+    #0b1220;
+}
+
+.app-theme-root.app-theme-dark .login-welcome-icon {
+  border-color: #383253;
+  background: #211e34;
+  color: #b4a4ff;
+}
+
+.app-theme-root.app-theme-dark .login-heading {
+  color: #f0f1f6;
+}
+
+.app-theme-root.app-theme-dark .login-subheading,
+.app-theme-root.app-theme-dark .login-signup .MuiTypography-root {
+  color: #a1a8b8;
+}
+
+.app-theme-root.app-theme-dark .login-field-label {
+  color: #d5d9e3;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiOutlinedInput-root {
+  background: #111b2b;
+  color: #edf0f7;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiOutlinedInput-notchedOutline {
+  border-color: #354158;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #7664bd;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiOutlinedInput-root.Mui-focused {
+  background: #121c2c;
+  box-shadow: 0 0 0 3px #a08af61a;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #a08af6;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiInputBase-input::placeholder {
+  color: #818ca0;
+}
+
+.app-theme-root.app-theme-dark .login-input .MuiInputAdornment-root,
+.app-theme-root.app-theme-dark .password-visibility-button {
+  color: #a3acc0 !important;
+}
+
+.app-theme-root.app-theme-dark .password-visibility-button:hover {
+  background: #202942 !important;
+  color: #c4b5fd !important;
+}
+
+.app-theme-root.app-theme-dark .login-security-note,
+.app-theme-root.app-theme-dark .login-copyright {
+  color: #9aa2b3;
+}
+
+.app-theme-root.app-theme-dark .login-signup {
+  border-color: #293449;
+}
+
+.app-theme-root.app-theme-dark .register-terms .MuiTypography-root,
+.app-theme-root.app-theme-dark .password-strength-heading .MuiTypography-root {
+  color: #a1a8b8;
+}
+
+.app-theme-root.app-theme-dark .password-rule {
+  color: #939caf;
+}
+
+.app-theme-root.app-theme-dark .password-rule-passed {
+  color: #66c99c;
+}
+
+.app-theme-root.app-theme-dark .password-strength-track span {
+  background: #354158;
+}
+
+.app-theme-root.app-theme-dark .password-strength-track.strength-level-1 span:first-child {
+  background: #d87968;
+}
+
+.app-theme-root.app-theme-dark .password-strength-track.strength-level-2 span:nth-child(-n + 2) {
+  background: #dda64d;
+}
+
+.app-theme-root.app-theme-dark .password-strength-track.strength-level-3 span {
+  background: #49a780;
+}
+
+.app-theme-root.app-theme-dark .MuiMenu-paper,
+.app-theme-root.app-theme-dark .MuiPopover-paper {
+  border: 1px solid #354158;
+  background: #111b2b;
+  color: #e5e7ef;
+}
+
+.app-theme-root.app-theme-dark .MuiMenuItem-root:hover {
+  background: #202942;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-theme-root {
+    transition: none;
+  }
+}

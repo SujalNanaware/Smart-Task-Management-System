@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Grid, Paper, Box } from '@mui/material';
+import { Container, Typography, Grid, Paper, useTheme } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 
 const data = [
@@ -17,21 +17,26 @@ const priorityData = [
 const COLORS = ['#f87171', '#fbbf24', '#34d399'];
 
 export default function AnalyticsPage() {
+  const theme = useTheme();
+  const chartText = theme.palette.text.secondary;
+  const chartGrid = theme.palette.divider;
+  const tooltipBackground = theme.palette.background.paper;
+
   return (
-    <Container sx={{ py: 6, color: '#fff' }}>
+    <Container sx={{ py: 6, color: 'text.primary' }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ mb: 4 }}>Task Analytics & Insights</Typography>
       
       <Grid container spacing={4}>
         {/* Bar Chart */}
         <Grid item xs={12} md={7}>
-          <Paper sx={{ p: 4, bgcolor: '#1e293b', color: '#fff', border: '1px solid #334155', borderRadius: 3, height: 400 }}>
+          <Paper sx={{ p: 4, bgcolor: 'background.paper', color: 'text.primary', border: '1px solid', borderColor: 'divider', borderRadius: 3, height: 400 }}>
             <Typography variant="h6" fontWeight="bold" gutterBottom>Tasks Status Breakdown</Typography>
             <ResponsiveContainer width="100%" height="85%">
               <BarChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="name" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
+                <XAxis dataKey="name" stroke={chartText} />
+                <YAxis stroke={chartText} />
+                <Tooltip contentStyle={{ backgroundColor: tooltipBackground, borderColor: chartGrid, color: theme.palette.text.primary }} />
                 <Bar dataKey="count" fill="#38bdf8" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -40,7 +45,7 @@ export default function AnalyticsPage() {
 
         {/* Pie Chart */}
         <Grid item xs={12} md={5}>
-          <Paper sx={{ p: 4, bgcolor: '#1e293b', color: '#fff', border: '1px solid #334155', borderRadius: 3, height: 400, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Paper sx={{ p: 4, bgcolor: 'background.paper', color: 'text.primary', border: '1px solid', borderColor: 'divider', borderRadius: 3, height: 400, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ width: '100%', textAlign: 'left' }}>Tasks by Priority</Typography>
             <ResponsiveContainer width="100%" height="85%">
               <PieChart>
@@ -49,7 +54,7 @@ export default function AnalyticsPage() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }} />
+                <Tooltip contentStyle={{ backgroundColor: tooltipBackground, borderColor: chartGrid, color: theme.palette.text.primary }} />
               </PieChart>
             </ResponsiveContainer>
           </Paper>

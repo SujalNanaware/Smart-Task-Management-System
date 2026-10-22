@@ -39,7 +39,7 @@ function ApplicationLayout({ darkMode, setDarkMode, onLogout }) {
         <Box sx={{ flex: 1, width: '100%' }}>
           <Outlet />
         </Box>
-        <Footer />
+        <Footer darkMode={darkMode} />
       </Box>
     </Box>
   );
@@ -69,31 +69,36 @@ export default function AppRoutes({
     : <Navigate to="/login" replace />;
 
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={publicPage(<LoginPage onLogin={onLogin} />)}
-      />
-      <Route
-        path="/register"
-        element={publicPage(<RegisterPage />)}
-      />
+    <Box
+      className={`app-theme-root${darkMode ? ' app-theme-dark' : ''}`}
+      sx={{ minHeight: '100vh', width: '100%' }}
+    >
+      <Routes>
+        <Route
+          path="/login"
+          element={publicPage(<LoginPage onLogin={onLogin} />)}
+        />
+        <Route
+          path="/register"
+          element={publicPage(<RegisterPage />)}
+        />
 
-      <Route element={protectedPage}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DashboardPage tasks={tasks} />} />
-        <Route
-          path="/tasks"
-          element={<TasksPage tasks={tasks} onDelete={onDeleteTask} />}
-        />
-        <Route
-          path="/tasks/new"
-          element={<TaskFormPage onAdd={onAddTask} />}
-        />
-        <Route path="/tasks/edit/:id" element={<TaskFormPage tasks={tasks} />} />
-        <Route path="/analytics" element={<AnalyticsPage tasks={tasks} />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Route>
-    </Routes>
+        <Route element={protectedPage}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardPage tasks={tasks} />} />
+          <Route
+            path="/tasks"
+            element={<TasksPage tasks={tasks} onDelete={onDeleteTask} />}
+          />
+          <Route
+            path="/tasks/new"
+            element={<TaskFormPage onAdd={onAddTask} />}
+          />
+          <Route path="/tasks/edit/:id" element={<TaskFormPage tasks={tasks} />} />
+          <Route path="/analytics" element={<AnalyticsPage tasks={tasks} />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Route>
+      </Routes>
+    </Box>
   );
 }
