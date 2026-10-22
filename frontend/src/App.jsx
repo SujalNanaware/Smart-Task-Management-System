@@ -1,15 +1,25 @@
-
 import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Box, ThemeProvider, createTheme } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material';
 
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => localStorage.getItem('taskflow-authenticated') === 'true'
+  );
   const [tasks, setTasks] = useState([]);
+
+  const handleLogin = () => {
+    localStorage.setItem('taskflow-authenticated', 'true');
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('taskflow-authenticated');
+    setIsAuthenticated(false);
+  };
 
   const handleAddTask = (newTask) => {
     setTasks((prevTasks) => [
@@ -17,6 +27,7 @@ export default function App() {
       {
         ...newTask,
         id: Date.now(),
+        createdAt: new Date().toISOString(),
         status: 'Pending',
       },
     ]);
@@ -41,39 +52,16 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <Box
-          sx={{
-            display: 'flex',
-            minHeight: '100vh',
-            bgcolor: 'background.default',
-            color: 'text.primary',
-          }}
-        >
-          <Navbar
-            darkMode={darkMode}
-            setDarkMode={setDarkMode}
-          />
-
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexGrow: 1,
-              minHeight: '100vh',
-              overflowX: 'hidden',
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <AppRoutes
-                tasks={tasks}
-                onAddTask={handleAddTask}
-                onDeleteTask={handleDeleteTask}
-              />
-            </Box>
-
-            <Footer />
-          </Box>
-        </Box>
+        <AppRoutes
+          tasks={tasks}
+          onAddTask={handleAddTask}
+          onDeleteTask={handleDeleteTask}
+          isAuthenticated={isAuthenticated}
+          onLogin={handleLogin}
+          onLogout={handleLogout}
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
       </BrowserRouter>
     </ThemeProvider>
   );

@@ -1,60 +1,246 @@
-import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Paper, Box, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { LogIn, Lock, Mail } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Alert,
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ArrowRight,
+  Check,
+  CheckSquare,
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  Mail,
+  Sparkles,
+} from "lucide-react";
+import "./LoginPage.css";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+export default function LoginPage({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [currentYear] = useState(() => new Date().getFullYear());
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError(true);
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    if (!email.trim() || !password) {
+      setError("Enter your email address and password to continue.");
       return;
     }
-    // Simulate successful login and redirect to dashboard
-    navigate('/dashboard');
+
+    if (typeof onLogin === "function") {
+      onLogin();
+    }
+    navigate("/dashboard");
   };
 
   return (
-    <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '80vh', color: '#fff' }}>
-      <Paper sx={{ p: 4, bgcolor: '#1e293b', border: '1px solid #334155', borderRadius: 3, boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}>
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Box sx={{ display: 'inline-flex', p: 1.5, bgcolor: 'rgba(124, 58, 237, 0.15)', color: '#a78bfa', borderRadius: '50%', mb: 1.5 }}>
-            <LogIn size={28} />
+    <Box className="login-page">
+      <Box className="login-layout">
+        <Box component="aside" className="login-showcase">
+          <Link className="login-brand" to="/login" aria-label="TaskFlow home">
+            <span className="login-brand-mark">
+              <CheckSquare size={21} strokeWidth={2.4} />
+            </span>
+            <span>
+              Task<span>Flow</span>
+            </span>
+          </Link>
+
+          <Box className="showcase-copy">
+            <span className="showcase-kicker">
+              <Sparkles size={14} />
+              YOUR WORK, IN FLOW
+            </span>
+            <Typography component="h1" className="showcase-heading">
+              Make every day
+              <br />
+              <span>count.</span>
+            </Typography>
+            <Typography className="showcase-description">
+              Bring your tasks, goals, and team into one calm, focused
+              workspace.
+            </Typography>
+
+            <Box className="showcase-preview">
+              <Box className="preview-topline">
+                <span className="preview-window-dots">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="preview-status">
+                  <span />
+                  YOUR WEEK
+                </span>
+              </Box>
+              <Typography className="preview-title">
+                A little progress adds up.
+              </Typography>
+              <Box className="preview-progress-track">
+                <span />
+              </Box>
+              <Box className="preview-footer">
+                <span>Weekly progress</span>
+                <strong>72%</strong>
+              </Box>
+              <Box className="preview-checklist">
+                <span className="preview-check">
+                  <Check size={12} />
+                </span>
+                <span>Plan your priorities</span>
+                <span className="preview-tag">DONE</span>
+              </Box>
+              <Box className="preview-checklist">
+                <span className="preview-check preview-check-active">
+                  <span />
+                </span>
+                <span>Make meaningful progress</span>
+                <span className="preview-tag preview-tag-active">TODAY</span>
+              </Box>
+            </Box>
           </Box>
-          <Typography variant="h5" fontWeight="bold">Welcome Back</Typography>
-          <Typography variant="body2" sx={{ color: '#94a3b8', mt: 0.5 }}>Sign in to continue to TaskFlow</Typography>
+
+          <Typography className="showcase-footnote">
+            A clearer head starts with a clearer plan.
+          </Typography>
+          <span className="showcase-orb showcase-orb-one" />
+          <span className="showcase-orb showcase-orb-two" />
         </Box>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>Please fill in all fields.</Alert>}
+        <Box component="main" className="login-main">
+          <Box className="login-card">
+           
+            
+            <Typography component="h2" className="login-heading">
+              Sign in to TaskFlow
+            </Typography>
+            <Typography className="login-subheading">
+              Your next productive day starts here.
+            </Typography>
 
-        <Box component="form" onSubmit={handleLogin}>
-          <TextField 
-            fullWidth label="Email Address" margin="normal" variant="outlined"
-            value={email} onChange={(e) => setEmail(e.target.value)}
-            InputLabelProps={{ style: { color: '#94a3b8' } }}
-            InputProps={{ style: { color: '#fff', backgroundColor: '#0f172a' } }}
-            sx={{ mb: 2 }}
-          />
-          <TextField 
-            fullWidth label="Password" type="password" margin="normal" variant="outlined"
-            value={password} onChange={(e) => setPassword(e.target.value)}
-            InputLabelProps={{ style: { color: '#94a3b8' } }}
-            InputProps={{ style: { color: '#fff', backgroundColor: '#0f172a' } }}
-            sx={{ mb: 3 }}
-          />
-          <Button 
-            type="submit" variant="contained" fullWidth size="large"
-            sx={{ bgcolor: '#7c3aed', '&:hover': { bgcolor: '#6d28d9' }, fontWeight: 'bold', py: 1.4, borderRadius: 2 }}
-          >
-            Sign In
-          </Button>
+            {error && (
+              <Alert
+                severity="error"
+                className="login-error"
+                onClose={() => setError("")}
+              >
+                {error}
+              </Alert>
+            )}
+
+            <Box
+              component="form"
+              className="login-form"
+              onSubmit={handleLogin}
+              noValidate
+            >
+              <label className="login-field-label" htmlFor="login-email">
+                Email address
+              </label>
+              <TextField
+                id="login-email"
+                className="login-input"
+                fullWidth
+                placeholder="you@example.com"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setError("");
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Mail size={17} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Box className="login-password-label">
+                <label className="login-field-label" htmlFor="login-password">
+                  Password
+                </label>
+                <button
+                  className="forgot-password"
+                  type="button"
+                  onClick={() =>
+                    setError("Password reset is not available yet. Please contact your workspace administrator.")
+                  }
+                >
+                  Forgot password?
+                </button>
+              </Box>
+              <TextField
+                id="login-password"
+                className="login-input"
+                fullWidth
+                placeholder="Enter your password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError("");
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockKeyhole size={17} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        className="password-visibility-button"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        onClick={() => setShowPassword((visible) => !visible)}
+                        edge="end"
+                        size="small"
+                      >
+                        {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Button
+                type="submit"
+                className="login-submit"
+                fullWidth
+                endIcon={<ArrowRight size={17} />}
+              >
+                Sign in
+              </Button>
+            </Box>
+
+            <Box className="login-security-note">
+              <LockKeyhole size={14} />
+              <Typography>Your workspace is private and secure.</Typography>
+            </Box>
+            <Box className="login-signup">
+              <Typography>New to TaskFlow?</Typography>
+              <Link to="/register">Create an account</Link>
+            </Box>
+          </Box>
+
+          <Typography className="login-copyright">
+            © {currentYear} TaskFlow. Built for better workdays.
+          </Typography>
         </Box>
-      </Paper>
-    </Container>
+      </Box>
+    </Box>
   );
 }

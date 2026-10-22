@@ -1,0 +1,236 @@
+.register-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.register-main {
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(22px, 4vh, 40px) clamp(24px, 6vw, 88px) 20px;
+}
+
+.register-card {
+  width: min(100%, 410px);
+  margin: auto 0;
+}
+
+.register-card .login-eyebrow {
+  margin-top: 17px !important;
+}
+
+.register-card .login-form {
+  margin-top: 21px;
+}
+
+.register-form .login-field-label {
+  margin-bottom: 6px;
+}
+
+.register-form .login-input {
+  margin-bottom: 13px !important;
+}
+
+.register-password-input {
+  margin-bottom: 0 !important;
+}
+
+.password-strength {
+  margin-top: 9px;
+}
+
+.password-strength-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.password-strength-heading .MuiTypography-root,
+.strength-label {
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.password-strength-heading .MuiTypography-root {
+  color: #9293a3;
+}
+
+.strength-label {
+  color: #a0a0ad;
+}
+
+.strength-label.strength-weak {
+  color: #d36d5d;
+}
+
+.strength-label.strength-fair {
+  color: #c18a3e;
+}
+
+.strength-label.strength-strong {
+  color: #32936c;
+}
+
+.password-strength-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.password-strength-track span {
+  height: 3px;
+  border-radius: 5px;
+  background: #edecf2;
+}
+
+.password-strength-track.strength-level-1 span:first-child {
+  background: #d87968;
+}
+
+.password-strength-track.strength-level-2 span:nth-child(-n + 2) {
+  background: #dda64d;
+}
+
+.password-strength-track.strength-level-3 span {
+  background: #49a780;
+}
+
+.password-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 13px;
+  margin: 8px 0 13px;
+}
+
+.password-rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #a0a0ad;
+}
+
+.password-rule svg {
+  color: #c3c3ce;
+  stroke-width: 2.5px;
+}
+
+.password-rule .MuiTypography-root {
+  color: inherit;
+  font-size: 8px;
+}
+
+.password-rule-passed {
+  color: #35936d;
+}
+
+.password-rule-passed svg {
+  color: #35936d;
+}
+
+.register-confirm-label {
+  margin-bottom: 6px;
+}
+
+.register-confirm-input {
+  margin-bottom: 7px !important;
+}
+
+.register-terms {
+  display: flex;
+  align-items: center;
+  margin: 0 0 11px -8px;
+}
+
+.register-terms .MuiCheckbox-root {
+  padding: 6px;
+  color: #b3b2c2;
+}
+
+.register-terms .MuiCheckbox-root.Mui-checked {
+  color: #7054e8;
+}
+
+.register-terms .MuiTypography-root {
+  color: #77788c;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.register-terms .MuiTypography-root span {
+  color: #7054d5;
+  font-weight: 700;
+}
+
+.register-security-note {
+  margin-top: 15px;
+}
+
+.register-card .login-signup {
+  margin-top: 17px;
+  padding-top: 14px;
+}
+
+.register-main .login-copyright {
+  margin-top: 16px !important;
+}
+
+@media (max-width: 760px) {
+  .register-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .register-showcase {
+    display: none;
+  }
+
+  .register-main {
+    padding: 28px clamp(18px, 6vw, 42px) 18px;
+  }
+
+  .register-card {
+    margin: auto 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .register-main {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .register-card .login-heading {
+    font-size: 27px !important;
+  }
+
+  .register-terms .MuiTypography-root {
+    font-size: 8px;
+  }
+}
+
+@media (max-height: 700px) {
+  .register-main {
+    padding-top: 20px;
+    padding-bottom: 16px;
+  }
+
+  .register-showcase .showcase-copy {
+    margin-top: 28px;
+    margin-bottom: 28px;
+  }
+
+  .register-showcase .register-benefits {
+    margin-top: 24px;
+  }
+}
+
+@media (max-height: 620px) and (min-width: 761px) {
+  .register-showcase .register-benefits {
+    display: none;
+  }
+
+  .register-showcase .showcase-heading {
+    font-size: 40px !important;
+  }
+}
