@@ -15,23 +15,60 @@ export default function App() {
     () => localStorage.getItem("taskflow-authenticated") === "true"
   );
 
+  const [username, setUsername] = useState(
+    () => localStorage.getItem("taskflow-username") || ""
+  );
+
+  // Language selection: English by default, or Hindi
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem("taskflow-language") || "en"
+  );
+
   const [tasks, setTasks] = useState([]);
 
+  // Dark/light mode
   const setDarkMode = (nextMode) => {
     setDarkModeState(nextMode);
     localStorage.setItem("taskflow-dark-mode", String(nextMode));
   };
 
-  const handleLogin = () => {
+  // Language selection
+  const handleLanguageChange = (nextLanguage) => {
+    setLanguage(nextLanguage);
+    localStorage.setItem("taskflow-language", nextLanguage);
+  };
+
+  // Login
+  const handleLogin = (email) => {
+    const emailName = email?.trim().split("@")[0] || "";
+
+    const nextUsername =
+      emailName
+        .split(/[._-]+/)
+        .filter(Boolean)
+        .map(
+          (part) =>
+            part.charAt(0).toUpperCase() + part.slice(1)
+        )
+        .join(" ") || "there";
+
     localStorage.setItem("taskflow-authenticated", "true");
+    localStorage.setItem("taskflow-username", nextUsername);
+
+    setUsername(nextUsername);
     setIsAuthenticated(true);
   };
 
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("taskflow-authenticated");
+    localStorage.removeItem("taskflow-username");
+
+    setUsername("");
     setIsAuthenticated(false);
   };
 
+  // Add task
   const handleAddTask = (newTask) => {
     setTasks((prevTasks) => [
       ...prevTasks,
@@ -44,12 +81,14 @@ export default function App() {
     ]);
   };
 
+  // Delete task
   const handleDeleteTask = (id) => {
     setTasks((prevTasks) =>
       prevTasks.filter((task) => task.id !== id)
     );
   };
 
+  // MUI theme
   const theme = createTheme({
     cssVariables: true,
 
@@ -81,10 +120,13 @@ export default function App() {
           onAddTask={handleAddTask}
           onDeleteTask={handleDeleteTask}
           isAuthenticated={isAuthenticated}
+          username={username}
           onLogin={handleLogin}
           onLogout={handleLogout}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
+          language={language}
+          setLanguage={handleLanguageChange}
         />
       </BrowserRouter>
     </ThemeProvider>

@@ -175,6 +175,15 @@
     #0b1220;
 }
 
+.app-theme-root.app-theme-dark .auth-theme-toggle {
+  border-color: #354158 !important;
+  color: #d6dbe6 !important;
+}
+
+.app-theme-root.app-theme-dark .auth-theme-toggle:hover {
+  background: #202942 !important;
+}
+
 .app-theme-root.app-theme-dark .login-welcome-icon {
   border-color: #383253;
   background: #211e34;

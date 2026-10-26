@@ -1,38 +1,76 @@
-import React, { useState } from 'react';
-import { Box, Container, Typography, Grid } from '@mui/material';
+
+import React from 'react';
+import { Box, Container, Typography } from '@mui/material';
 import { CheckSquare } from 'lucide-react';
 
 export default function Footer({ darkMode }) {
-  const [currentYear] = useState(() => new Date().getFullYear());
+  const currentYear = new Date().getFullYear();
 
   return (
-    <Box sx={{
-      bgcolor: darkMode ? '#0b1220' : '#ffffff',
-      color: darkMode ? '#94a3b8' : '#70758a',
-      borderTop: '1px solid',
-      borderColor: darkMode ? '#263247' : '#e8eaf0',
-      py: 5,
-      mt: 'auto',
-    }}>
-      <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="space-between" alignItems="center">
-          <Grid item xs={12} md={6}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              <CheckSquare color={darkMode ? '#38bdf8' : '#7054e8'} size={22} />
-              <Typography variant="subtitle1" fontWeight="bold" sx={{ color: darkMode ? '#fff' : '#29283e' }}>
-                TaskFlow
-              </Typography>
-            </Box>
-            <Typography variant="body2">
-              Your smart task management system for peak daily productivity and effortless tracking.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6} sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-            <Typography variant="body2">
-              © {currentYear} TaskFlow. All rights reserved.
-            </Typography>
-          </Grid>
-        </Grid>
+    <Box
+      component="footer"
+      sx={{
+        bgcolor: darkMode ? '#0d1117' : '#ffffff',
+        color: darkMode ? '#9198a1' : '#64748b',
+        borderTop: '1px solid',
+        borderColor: darkMode ? '#30363d' : '#e5e7eb',
+        py: 1.25,
+        mt: 'auto',
+      }}
+    >
+      <Container
+        maxWidth={false}
+        sx={{
+          px: { xs: 2, md: 3 },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 1,
+        }}
+      >
+        {/* Logo and brand */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+          <CheckSquare
+            size={17}
+            color={darkMode ? '#38bdf8' : '#7054e8'}
+          />
+
+          <Typography
+            sx={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: darkMode ? '#f0f6fc' : '#29283e',
+            }}
+          >
+            TaskFlow
+          </Typography>
+
+          <Typography
+            component="span"
+            sx={{
+              fontSize: 12,
+              color: darkMode ? '#64748b' : '#cbd5e1',
+              mx: 0.5,
+            }}
+          >
+            |
+          </Typography>
+
+          <Typography sx={{ fontSize: 11.5 }}>
+            Smart task management
+          </Typography>
+        </Box>
+
+        {/* Copyright */}
+        <Typography
+          sx={{
+            fontSize: 11.5,
+            textAlign: { xs: 'left', sm: 'right' },
+          }}
+        >
+          © {currentYear} TaskFlow. All rights reserved.
+        </Typography>
       </Container>
     </Box>
   );

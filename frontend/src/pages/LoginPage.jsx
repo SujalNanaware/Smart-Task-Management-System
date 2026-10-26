@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import ThemeToggle from "../components/layout/ThemeToggle";
 import {
   ArrowRight,
   Check,
@@ -21,7 +22,7 @@ import {
 } from "lucide-react";
 import "./LoginPage.css";
 
-export default function LoginPage({ onLogin }) {
+export default function LoginPage({ onLogin, darkMode, setDarkMode }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +39,7 @@ export default function LoginPage({ onLogin }) {
     }
 
     if (typeof onLogin === "function") {
-      onLogin();
+      onLogin(email);
     }
     navigate("/dashboard");
   };
@@ -118,6 +119,7 @@ export default function LoginPage({ onLogin }) {
         </Box>
 
         <Box component="main" className="login-main">
+          <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
           <Box className="login-card">
            
             

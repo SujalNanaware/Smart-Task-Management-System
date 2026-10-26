@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import ThemeToggle from "../components/layout/ThemeToggle";
 import {
   ArrowRight,
   AtSign,
@@ -31,7 +32,7 @@ const passwordRules = [
   { label: "One number", test: (value) => /\d/.test(value) },
 ];
 
-export default function RegisterPage() {
+export default function RegisterPage({ darkMode, setDarkMode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -149,6 +150,7 @@ export default function RegisterPage() {
         </Box>
 
         <Box component="main" className="login-main register-main">
+          <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
           <Box className="login-card register-card">
             
             <Typography component="h2" className="login-heading">
