@@ -30,7 +30,7 @@ export default function LoginPage({ onLogin, darkMode, setDarkMode }) {
   const [currentYear] = useState(() => new Date().getFullYear());
   const navigate = useNavigate();
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
 
     if (!email.trim() || !password) {
@@ -38,10 +38,17 @@ export default function LoginPage({ onLogin, darkMode, setDarkMode }) {
       return;
     }
 
-    if (typeof onLogin === "function") {
-      onLogin(email);
+    if (typeof onLogin !== "function") {
+      setError("Sign in is unavailable right now. Please try again.");
+      return;
     }
-    navigate("/dashboard");
+
+    try {
+      await onLogin(email, password);
+      navigate("/dashboard");
+    } catch (loginError) {
+      setError(loginError.message || "Unable to sign in. Please try again.");
+    }
   };
 
   return (

@@ -1,10 +1,20 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import AppRoutes from "./routes/AppRoutes";
+import {
+  AUTH_TOKEN_KEY,
+  createTask,
+  deleteTask,
+  getCurrentUser,
+  getTasks,
+  login,
+  logout,
+  register,
+} from "./api";
 
 export default function App() {
   const [darkMode, setDarkModeState] = useState(
@@ -12,7 +22,7 @@ export default function App() {
   );
 
   const [isAuthenticated, setIsAuthenticated] = useState(
-    () => localStorage.getItem("taskflow-authenticated") === "true"
+    () => Boolean(localStorage.getItem(AUTH_TOKEN_KEY))
   );
 
   const [username, setUsername] = useState(
@@ -25,6 +35,34 @@ export default function App() {
   );
 
   const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!token) return undefined;
+
+    let active = true;
+    Promise.all([getCurrentUser(token), getTasks(token)])
+      .then(([result, userTasks]) => {
+        if (!active) return;
+        setUsername(result.user.name);
+        localStorage.setItem("taskflow-username", result.user.name);
+        setTasks(userTasks);
+        setIsAuthenticated(true);
+      })
+      .catch((error) => {
+        console.error("Unable to restore the TaskFlow session:", error);
+        if (!active) return;
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem("taskflow-username");
+        setUsername("");
+        setTasks([]);
+        setIsAuthenticated(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Dark/light mode
   const setDarkMode = (nextMode) => {
@@ -39,50 +77,41 @@ export default function App() {
   };
 
   // Login
-  const handleLogin = (email) => {
-    const emailName = email?.trim().split("@")[0] || "";
-
-    const nextUsername =
-      emailName
-        .split(/[._-]+/)
-        .filter(Boolean)
-        .map(
-          (part) =>
-            part.charAt(0).toUpperCase() + part.slice(1)
-        )
-        .join(" ") || "there";
-
-    localStorage.setItem("taskflow-authenticated", "true");
-    localStorage.setItem("taskflow-username", nextUsername);
-
-    setUsername(nextUsername);
+  const handleLogin = async (email, password) => {
+    const result = await login(email, password);
+    const userTasks = await getTasks(result.token);
+    localStorage.setItem(AUTH_TOKEN_KEY, result.token);
+    localStorage.setItem("taskflow-username", result.user.name);
+    setTasks(userTasks);
+    setUsername(result.user.name);
     setIsAuthenticated(true);
   };
 
-  // Logout
-  const handleLogout = () => {
-    localStorage.removeItem("taskflow-authenticated");
-    localStorage.removeItem("taskflow-username");
+  const handleRegister = async (name, email, password) => {
+    await register(name, email, password);
+  };
 
+  const handleLogout = () => {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem("taskflow-username");
+    setTasks([]);
     setUsername("");
     setIsAuthenticated(false);
+    if (token) {
+      logout(token).catch((error) => {
+        console.error("Unable to revoke the TaskFlow session:", error);
+      });
+    }
   };
 
-  // Add task
-  const handleAddTask = (newTask) => {
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      {
-        ...newTask,
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-        status: "Pending",
-      },
-    ]);
+  const handleAddTask = async (newTask) => {
+    const savedTask = await createTask(newTask);
+    setTasks((prevTasks) => [savedTask, ...prevTasks]);
   };
 
-  // Delete task
-  const handleDeleteTask = (id) => {
+  const handleDeleteTask = async (id) => {
+    await deleteTask(id);
     setTasks((prevTasks) =>
       prevTasks.filter((task) => task.id !== id)
     );
@@ -122,6 +151,7 @@ export default function App() {
           isAuthenticated={isAuthenticated}
           username={username}
           onLogin={handleLogin}
+          onRegister={handleRegister}
           onLogout={handleLogout}
           darkMode={darkMode}
           setDarkMode={setDarkMode}

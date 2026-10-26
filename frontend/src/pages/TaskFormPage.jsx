@@ -71,7 +71,7 @@ export default function TaskFormPage({ onAdd }) {
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -91,17 +91,20 @@ export default function TaskFormPage({ onAdd }) {
       return;
     }
 
-    onAdd({
-      title: trimmedTitle,
-      desc: description.trim(),
-      description: description.trim(),
-      category,
-      priority,
-      dueDate,
-      status: "Pending",
-    });
-
-    navigate("/tasks");
+    try {
+      await onAdd({
+        title: trimmedTitle,
+        desc: description.trim(),
+        description: description.trim(),
+        category,
+        priority,
+        dueDate,
+        status: "Pending",
+      });
+      navigate("/tasks");
+    } catch (saveError) {
+      setError(saveError.message || "Unable to save the task. Please try again.");
+    }
   };
 
   return (

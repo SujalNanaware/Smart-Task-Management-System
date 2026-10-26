@@ -32,7 +32,7 @@ const passwordRules = [
   { label: "One number", test: (value) => /\d/.test(value) },
 ];
 
-export default function RegisterPage({ darkMode, setDarkMode }) {
+export default function RegisterPage({ onRegister, darkMode, setDarkMode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +46,7 @@ export default function RegisterPage({ darkMode, setDarkMode }) {
   const passwordScore = passwordRules.filter((rule) => rule.test(password)).length;
   const passwordStrength = ["", "Weak", "Fair", "Strong"][passwordScore];
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
 
     if (!name.trim() || !email.trim() || !password || !confirmPassword) {
@@ -74,7 +74,17 @@ export default function RegisterPage({ darkMode, setDarkMode }) {
       return;
     }
 
-    navigate("/login");
+    if (typeof onRegister !== "function") {
+      setError("Account creation is unavailable right now. Please try again.");
+      return;
+    }
+
+    try {
+      await onRegister(name.trim(), email.trim(), password);
+      navigate("/login");
+    } catch (registerError) {
+      setError(registerError.message || "Unable to create your account. Please try again.");
+    }
   };
 
   return (

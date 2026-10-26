@@ -71,6 +71,7 @@ export default function AppRoutes({
   isAuthenticated,
   username,
   onLogin,
+  onRegister,
   onLogout,
   darkMode,
   setDarkMode,
@@ -116,6 +117,7 @@ export default function AppRoutes({
           path="/register"
           element={publicPage(
             <RegisterPage
+              onRegister={onRegister}
               darkMode={darkMode}
               setDarkMode={setDarkMode}
             />
