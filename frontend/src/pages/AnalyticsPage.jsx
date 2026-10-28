@@ -33,14 +33,14 @@ import {
 const priorityConfig = [
   { name: 'High', color: '#fb7185' },
   { name: 'Medium', color: '#fbbf24' },
-  { name: 'Low', color: '#38bdf8' },
+  { name: 'Low', color: '#34d399' },
 ];
 
 const deadlineConfig = [
   { name: 'Overdue', color: '#fb7185' },
   { name: 'Next 7 days', color: '#fbbf24' },
-  { name: 'Later', color: '#38bdf8' },
-  { name: 'No deadline', color: '#94a3b8' },
+  { name: 'Later', color: '#34d399' },
+  { name: 'No deadline', color: '#94a69a' },
 ];
 
 function getDateKey(date) {
@@ -158,7 +158,7 @@ export default function AnalyticsPage({ tasks = [] }) {
       value: categoryData.length,
       detail: largestCategory ? `Most active: ${largestCategory.name}` : 'Create tasks to see category data',
       icon: <FolderKanban size={19} />,
-      color: '#38bdf8',
+      color: '#34d399',
     },
     {
       label: 'Overdue tasks',
@@ -179,7 +179,7 @@ export default function AnalyticsPage({ tasks = [] }) {
       value: `${completionRate}%`,
       detail: `${completedTotal} of ${filteredTasks.length} tasks completed`,
       icon: <Target size={19} />,
-      color: '#a78bfa',
+      color: '#6ee7b7',
     },
   ];
 
@@ -236,7 +236,7 @@ export default function AnalyticsPage({ tasks = [] }) {
                   <Tooltip contentStyle={tooltipStyle} cursor={{ fill: theme.palette.action.hover }} />
                   <Bar dataKey="total" name="Tasks" radius={[0, 6, 6, 0]} maxBarSize={24}>
                     {categoryData.map((entry, index) => (
-                      <Cell key={entry.name} fill={index === 0 ? '#7c3aed' : '#8b7bea'} />
+                      <Cell key={entry.name} fill={index === 0 ? '#087f5b' : '#34d399'} />
                     ))}
                   </Bar>
                 </BarChart>

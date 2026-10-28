@@ -5,23 +5,14 @@ import {
   Box,
   Button,
   FormControl,
-  InputAdornment,
   MenuItem,
   Select,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CalendarDays,
-  Check,
-  Folder,
-  Plus,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import "./TaskFormPage.css";
 
 const categories = [
   "Development",
@@ -32,286 +23,628 @@ const categories = [
   "Other",
 ];
 
-const priorities = [
-  {
-    value: "Low",
-    label: "Low",
-    description: "Whenever you have time",
-    className: "low",
-  },
-  {
-    value: "Medium",
-    label: "Medium",
-    description: "Important, but flexible",
-    className: "medium",
-  },
-  {
-    value: "High",
-    label: "High",
-    description: "Needs your focus soon",
-    className: "high",
-  },
+const taskTypes = [
+  "Task",
+  "Feature",
+  "Bug",
+  "Improvement",
+  "Research",
 ];
 
-function getLocalDateString(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
+const priorities = ["Low", "Medium", "High", "Critical"];
+
+const todayString = () => {
+  const date = new Date();
+
+  return `${date.getFullYear()}-${String(
+    date.getMonth() + 1
+  ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
+// Compact styling for text fields
+const inputSx = (darkMode) => ({
+  "& .MuiOutlinedInput-root": {
+    minHeight: 36,
+    backgroundColor: darkMode ? "#101d17" : "#FAFCFA",
+    borderRadius: "5px",
+    color: darkMode ? "#e5e7ef" : "#353535",
+    fontSize: 12,
+    "& fieldset": {
+      borderColor: darkMode ? "#344b3d" : "#d8e4da",
+    },
+    "&:hover fieldset": {
+      borderColor: darkMode ? "#16835d" : "#91b49b",
+    },
+    "&.Mui-focused": {
+      backgroundColor: darkMode ? "#12251a" : "#f4faf5",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: darkMode ? "#34d399" : "#0f9f6e",
+      borderWidth: 1,
+    },
+  },
+  "& .MuiOutlinedInput-input": {
+    padding: "8px 10px",
+    "&::placeholder": {
+      color: darkMode ? "#7e899e" : "#AAA18F",
+      opacity: 1,
+    },
+  },
+  "& .MuiInputBase-inputMultiline": {
+    padding: 0,
+    lineHeight: 1.5,
+  },
+  "& .MuiOutlinedInput-root.MuiInputBase-multiline": {
+    padding: "8px 10px",
+  },
+  "& input[type='date']::-webkit-calendar-picker-indicator": {
+    filter: darkMode ? "invert(1)" : "none",
+  },
+});
+
+// Compact styling for dropdowns
+const selectSx = (darkMode) => ({
+  "& .MuiOutlinedInput-root": {
+    minHeight: 36,
+    backgroundColor: darkMode ? "#101d17" : "#FAFCFA",
+    borderRadius: "5px",
+    color: darkMode ? "#e5e7ef" : "#353535",
+    fontSize: 12,
+    "& fieldset": {
+      borderColor: darkMode ? "#344b3d" : "#d8e4da",
+    },
+    "&:hover fieldset": {
+      borderColor: darkMode ? "#16835d" : "#91b49b",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: darkMode ? "#34d399" : "#0f9f6e",
+      borderWidth: 1,
+    },
+  },
+  "& .MuiSelect-select": {
+    padding: "8px 10px",
+  },
+  "& .MuiSelect-icon": {
+    color: darkMode ? "#9ca6b9" : "#77705F",
+  },
+});
+
+// Shared layout styles
+const sectionSx = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  mb: 2.5,
+  pb: 2.5,
+};
+
+const twoColumnSx = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "minmax(0, 1fr)",
+    sm: "repeat(2, minmax(0, 1fr))",
+  },
+  gap: { xs: 1.8, sm: 2.5 },
+  alignItems: "start",
+};
 
 export default function TaskFormPage({ onAdd }) {
   const navigate = useNavigate();
+  const darkMode = useTheme().palette.mode === "dark";
+  const today = todayString();
 
-  const [today] = useState(() => getLocalDateString(new Date()));
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Development");
-  const [priority, setPriority] = useState("Medium");
-  const [dueDate, setDueDate] = useState("");
+  const [form, setForm] = useState({
+    title: "",
+    taskType: "Task",
+    category: "Development",
+    project: "",
+    description: "",
+    assignee: "",
+    priority: "Medium",
+    estimatedHours: "",
+    startDate: today,
+    dueDate: "",
+    tags: "",
+    acceptanceCriteria: "",
+  });
+
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const updateField = (field, value) => {
+    setForm((previous) => ({
+      ...previous,
+      [field]: value,
+    }));
+
+    setError("");
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const trimmedTitle = title.trim();
-
-    if (!trimmedTitle) {
-      setError("Add a task name before saving.");
+    if (!form.title.trim()) {
+      setError("Please enter a task name.");
       return;
     }
 
-    if (dueDate && dueDate < today) {
-      setError("Choose today or a future date for the deadline.");
+    if (form.startDate && form.startDate < today) {
+      setError("The start date cannot be in the past.");
+      return;
+    }
+
+    if (form.dueDate && form.dueDate < today) {
+      setError("The due date must be today or a future date.");
+      return;
+    }
+
+    if (
+      form.startDate &&
+      form.dueDate &&
+      form.dueDate < form.startDate
+    ) {
+      setError("The due date cannot be earlier than the start date.");
+      return;
+    }
+
+    if (
+      form.estimatedHours !== "" &&
+      (!Number.isFinite(Number(form.estimatedHours)) ||
+        Number(form.estimatedHours) <= 0)
+    ) {
+      setError("Estimated effort must be greater than zero.");
       return;
     }
 
     if (typeof onAdd !== "function") {
-      setError("Task creation is unavailable right now. Please try again.");
+      setError("Task creation is unavailable. Check your app setup.");
       return;
     }
 
+    const taskData = {
+      title: form.title.trim(),
+      desc: form.description.trim(),
+      description: form.description.trim(),
+      taskType: form.taskType,
+      category: form.category,
+      project: form.project.trim(),
+      assignee: form.assignee.trim(),
+      priority: form.priority,
+      estimatedHours:
+        form.estimatedHours === ""
+          ? null
+          : Number(form.estimatedHours),
+      startDate: form.startDate,
+      dueDate: form.dueDate,
+      tags: form.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+      acceptanceCriteria: form.acceptanceCriteria.trim(),
+      status: "Pending",
+    };
+
+    setSaving(true);
+    setError("");
+
     try {
-      await onAdd({
-        title: trimmedTitle,
-        desc: description.trim(),
-        description: description.trim(),
-        category,
-        priority,
-        dueDate,
-        status: "Pending",
-      });
+      await onAdd(taskData);
       navigate("/tasks");
     } catch (saveError) {
-      setError(saveError.message || "Unable to save the task. Please try again.");
+      setError(
+        saveError?.message ||
+          "Unable to create the task. Please try again."
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
+  // Reusable text input
+  const renderInput = ({
+    id,
+    label,
+    field,
+    placeholder = "",
+    type = "text",
+    optional = false,
+    multiline = false,
+    rows = 2,
+    helperText = "",
+    inputProps = {},
+  }) => (
+    <Box sx={{ width: "100%", minWidth: 0 }}>
+      <Typography
+        component="label"
+        htmlFor={id}
+        sx={{
+          display: "block",
+          mb: 0.7,
+          color: darkMode ? "#d6dbe6" : "#555555",
+          fontSize: 12,
+          fontWeight: 600,
+        }}
+      >
+        {label}
+
+        {!optional && (
+          <Box component="span" sx={{ color: "#C75B4B" }}>
+            {" "}*
+          </Box>
+        )}
+
+        {optional && (
+          <Box
+            component="span"
+            sx={{
+              ml: 0.5,
+              color: darkMode ? "#9aa4b7" : "#999999",
+              fontSize: 10,
+              fontWeight: 400,
+            }}
+          >
+            (Optional)
+          </Box>
+        )}
+      </Typography>
+
+      <TextField
+        id={id}
+        name={field}
+        fullWidth
+        size="small"
+        type={type}
+        multiline={multiline}
+        minRows={multiline ? rows : undefined}
+        placeholder={placeholder}
+        value={form[field]}
+        onChange={(event) =>
+          updateField(field, event.target.value)
+        }
+        sx={inputSx(darkMode)}
+        inputProps={inputProps}
+      />
+
+      {helperText && (
+        <Typography
+          sx={{
+            mt: 0.5,
+            color: darkMode ? "#9aa4b7" : "#969086",
+            fontSize: 10,
+          }}
+        >
+          {helperText}
+        </Typography>
+      )}
+    </Box>
+  );
+
+  // Reusable dropdown
+  const renderSelect = (id, label, field, options) => (
+    <Box sx={{ width: "100%", minWidth: 0 }}>
+      <Typography
+        component="label"
+        htmlFor={id}
+        sx={{
+          display: "block",
+          mb: 0.7,
+          color: darkMode ? "#d6dbe6" : "#555555",
+          fontSize: 12,
+          fontWeight: 600,
+        }}
+      >
+        {label}
+        <Box component="span" sx={{ color: "#C75B4B" }}>
+          {" "}*
+        </Box>
+      </Typography>
+
+      <FormControl fullWidth size="small" sx={selectSx(darkMode)}>
+        <Select
+          id={id}
+          name={field}
+          value={form[field]}
+          onChange={(event) =>
+            updateField(field, event.target.value)
+          }
+          inputProps={{ "aria-label": label }}
+        >
+          {options.map((option) => (
+            <MenuItem
+              key={option}
+              value={option}
+              sx={{ fontSize: 12 }}
+            >
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
+  );
+
   return (
-    <Box className="task-form-page">
-      <Box className="task-form-shell">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        width: "100%",
+        backgroundColor: darkMode ? "#07110d" : "#FFFFFF",
+        color: darkMode ? "#e5eee8" : "#292929",
+        boxSizing: "border-box",
+        px: { xs: 2, sm: 3, md: 4 },
+        py: { xs: 2, md: 3 },
+        "& *, & *::before, & *::after": {
+          boxSizing: "border-box",
+        },
+      }}
+    >
+      <Box sx={{ width: "100%", maxWidth: 1100, mx: "auto" }}>
+        {/* Back navigation */}
         <Button
-          className="task-form-back"
           startIcon={<ArrowLeft size={16} />}
           onClick={() => navigate("/tasks")}
+          sx={{
+            mb: 2,
+            ml: -1,
+            px: 1.2,
+            py: 0.6,
+            color: darkMode ? "#b0b7c6" : "#777777",
+            textTransform: "none",
+            fontSize: 12,
+            borderRadius: "5px",
+            "&:hover": {
+              backgroundColor: darkMode ? "#1c2740" : "#F6F3ED",
+              color: darkMode ? "#6ee7b7" : "#292929",
+            },
+          }}
         >
           Back to tasks
         </Button>
 
-        <Box className="task-form-heading">
-          <span className="task-form-heading-icon">
-            <Sparkles size={20} />
-          </span>
-
+        {/* Page heading */}
+        <Box sx={{ mb: 3, textAlign: "center" }}>
           <Typography
             component="h1"
-            className="task-form-title"
+            sx={{
+              color: darkMode ? "#f0f1f6" : "#292929",
+              fontSize: { xs: 22, sm: 26, md: 29 },
+              fontWeight: 600,
+              letterSpacing: -0.8,
+              lineHeight: 1.3,
+              mb: 0.6,
+            }}
           >
-            Create a new task
+            Create New Task
+          </Typography>
+
+          <Typography
+            sx={{
+              maxWidth: 560,
+              mx: "auto",
+              color: darkMode ? "#a1a9ba" : "#838383",
+              fontSize: 12,
+              lineHeight: 1.6,
+            }}
+          >
+            Add the details below to organize your next piece of work.
           </Typography>
         </Box>
 
-        <Box className="task-form-layout">
-          <Box
-            component="form"
-            className="task-form-card"
-            onSubmit={handleSubmit}
-            noValidate
-          >
-            {/* Task details */}
-            <Box className="form-section">
-              {error && (
-                <Alert
-                  className="task-form-error"
-                  severity="error"
-                  onClose={() => setError("")}
-                >
-                  {error}
-                </Alert>
+        {/* Main form */}
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          {error && (
+            <Alert
+              severity="error"
+              onClose={() => setError("")}
+              sx={{
+                mb: 2,
+                borderRadius: "5px",
+                fontSize: 12,
+              }}
+            >
+              {error}
+            </Alert>
+          )}
+
+          <Box sx={sectionSx}>
+            {/* Row 1: Task Name | Task Type */}
+            <Box sx={twoColumnSx}>
+              {renderInput({
+                id: "task-title",
+                label: "Task Name",
+                field: "title",
+                placeholder: "Enter task name",
+                inputProps: { maxLength: 100 },
+              })}
+
+              {renderSelect(
+                "task-type",
+                "Task Type",
+                "taskType",
+                taskTypes
+              )}
+            </Box>
+
+            {/* Row 2: Category | Project */}
+            <Box sx={twoColumnSx}>
+              {renderSelect(
+                "task-category",
+                "Category",
+                "category",
+                categories
               )}
 
-              <label className="task-field-label" htmlFor="task-title">
-                Task name <span>*</span>
-              </label>
-
-              <TextField
-                id="task-title"
-                className="task-form-input task-title-input"
-                fullWidth
-                placeholder="e.g. Prepare the project presentation"
-                value={title}
-                onChange={(event) => {
-                  setTitle(event.target.value);
-                  setError("");
-                }}
-                inputProps={{ maxLength: 100 }}
-              />
-
-              <Box className="task-input-helper">
-                <Typography>
-                  Make it clear and action-oriented.
-                </Typography>
-                <Typography>{title.length}/100</Typography>
-              </Box>
-
-              <label
-                className="task-field-label"
-                htmlFor="task-description"
-              >
-                Description <span>Optional</span>
-              </label>
-
-              <TextField
-                id="task-description"
-                className="task-form-input task-description-input"
-                fullWidth
-                multiline
-                minRows={4}
-                maxRows={8}
-                placeholder="Add context, notes, or what success looks like..."
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                inputProps={{ maxLength: 500 }}
-              />
-
-              <Box className="task-input-helper">
-                <Typography>
-                  {description.length}/500
-                </Typography>
-              </Box>
+              {renderInput({
+                id: "task-project",
+                label: "Project",
+                field: "project",
+                placeholder: "Enter project name",
+                optional: true,
+                inputProps: { maxLength: 100 },
+              })}
             </Box>
 
-            {/* Category and priority */}
-            <Box className="form-section form-section-separated">
-              <label
-                className="task-field-label"
-                htmlFor="task-category"
-              >
-                Category
-              </label>
+            {/* Row 3: Description */}
+            {renderInput({
+              id: "task-description",
+              label: "Description",
+              field: "description",
+              placeholder: "Describe the task and expected outcome",
+              optional: true,
+              multiline: true,
+              rows: 2,
+              inputProps: { maxLength: 500 },
+            })}
 
-              <FormControl
-                className="task-form-select"
-                fullWidth
-              >
-                <Select
-                  id="task-category"
-                  value={category}
-                  onChange={(event) => setCategory(event.target.value)}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <Folder size={17} />
-                    </InputAdornment>
-                  }
-                  inputProps={{ "aria-label": "Task category" }}
-                >
-                  {categories.map((item) => (
-                    <MenuItem key={item} value={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            {/* Row 4: Assigned To | Priority */}
+            <Box sx={twoColumnSx}>
+              {renderInput({
+                id: "task-assignee",
+                label: "Assigned To",
+                field: "assignee",
+                placeholder: "Enter team member name",
+                optional: true,
+                inputProps: { maxLength: 100 },
+              })}
 
-              <Typography className="task-field-label">
-                Priority
-              </Typography>
-
-              <Box
-                className="priority-options"
-                role="group"
-                aria-label="Task priority"
-              >
-                {priorities.map((item) => (
-                  <button
-                    className={`priority-option priority-${item.className}${
-                      priority === item.value ? " is-selected" : ""
-                    }`}
-                    key={item.value}
-                    type="button"
-                    aria-pressed={priority === item.value}
-                    onClick={() => setPriority(item.value)}
-                  >
-                    <span className="priority-option-top">
-                      <span className="priority-dot" />
-                      <span>{item.label}</span>
-                      {priority === item.value && <Check size={15} />}
-                    </span>
-
-                    <span className="priority-description">
-                      {item.description}
-                    </span>
-                  </button>
-                ))}
-              </Box>
+              {renderSelect(
+                "task-priority",
+                "Priority",
+                "priority",
+                priorities
+              )}
             </Box>
 
-            {/* Deadline */}
-            <Box className="form-section form-section-separated">
-              <label
-                className="task-field-label"
-                htmlFor="task-due-date"
-              >
-                Due date <span>Optional</span>
-              </label>
+            {/* Row 5: Estimated Effort | Start Date */}
+            <Box sx={twoColumnSx}>
+              {renderInput({
+                id: "estimated-hours",
+                label: "Estimated Effort (Hours)",
+                field: "estimatedHours",
+                placeholder: "e.g. 4",
+                type: "number",
+                optional: true,
+                inputProps: {
+                  min: 0.25,
+                  step: 0.25,
+                },
+              })}
 
-              <TextField
-                id="task-due-date"
-                className="task-form-input task-date-input"
-                type="date"
-                fullWidth
-                value={dueDate}
-                onChange={(event) => {
-                  setDueDate(event.target.value);
-                  setError("");
-                }}
-                inputProps={{ min: today }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <CalendarDays size={17} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              {renderInput({
+                id: "start-date",
+                label: "Start Date",
+                field: "startDate",
+                type: "date",
+                inputProps: {
+                  min: today,
+                  max: form.dueDate || undefined,
+                },
+              })}
             </Box>
 
-            {/* Actions */}
-            <Box className="task-form-actions">
+            {/* Row 6: Due Date | Tags */}
+            <Box sx={twoColumnSx}>
+              {renderInput({
+                id: "due-date",
+                label: "Due Date",
+                field: "dueDate",
+                type: "date",
+                optional: true,
+                inputProps: {
+                  min: form.startDate || today,
+                },
+              })}
+
+              {renderInput({
+                id: "task-tags",
+                label: "Tags",
+                field: "tags",
+                placeholder: "Frontend, API, Testing",
+                optional: true,
+                inputProps: { maxLength: 250 },
+              })}
+            </Box>
+
+            {/* Row 7: Acceptance Criteria */}
+            {renderInput({
+              id: "acceptance-criteria",
+              label: "Acceptance Criteria",
+              field: "acceptanceCriteria",
+              placeholder:
+                "Describe what must be completed for this task to be considered done...",
+              optional: true,
+              multiline: true,
+              rows: 2,
+              inputProps: { maxLength: 1000 },
+            })}
+          </Box>
+
+          {/* Footer actions */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              justifyContent: "space-between",
+              alignItems: { xs: "stretch", sm: "center" },
+              pt: 2,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 1,
+                order: { xs: 1, sm: 2 },
+              }}
+            >
               <Button
-                className="task-cancel-button"
+                type="button"
+                disabled={saving}
                 onClick={() => navigate("/tasks")}
+                sx={{
+                  minHeight: 25,
+                  px: 2.2,
+                  color: darkMode ? "#c4cad6" : "#555555",
+                  backgroundColor: darkMode ? "#101d17" : "#FFFFFF",
+                  border: `1px solid ${darkMode ? "#3a455b" : "#DED8CC"}`,
+                  borderRadius: "5px",
+                  textTransform: "none",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: darkMode ? "#1c2436" : "#F8F6F1",
+                    borderColor: darkMode ? "#66599e" : "#C7BBA5",
+                  },
+                }}
               >
                 Cancel
               </Button>
 
               <Button
-                className="task-save-button"
                 type="submit"
-                startIcon={<Plus size={17} />}
-                endIcon={<ArrowRight size={16} />}
+                disabled={saving}
+                startIcon={<Plus size={5} />}
+                sx={{
+                  minHeight: 25,
+                  px: 1,
+                  color: "#FFFFFF",
+                  backgroundColor: "#0f9f6e",
+                  border: "1px solid #0f9f6e",
+                  borderRadius: "5px",
+                  textTransform: "none",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  "&:hover": {
+                    backgroundColor: darkMode ? "#8068ee" : "#514633",
+                    borderColor: darkMode ? "#8068ee" : "#514633",
+                  },
+                  "&.Mui-disabled": {
+                    color: "#FFFFFF",
+                    backgroundColor: "#A5A098",
+                  },
+                }}
               >
-                Create task
+                {saving ? "Creating..." : "Create Task"}
               </Button>
             </Box>
           </Box>

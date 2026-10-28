@@ -39,7 +39,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-const PURPLE = "#6738f5";
+const BRAND_GREEN = "#0f9f6e";
 
 const priorityStyles = {
   High: {
@@ -51,8 +51,8 @@ const priorityStyles = {
     background: "#fef3c7",
   },
   Low: {
-    color: "#1677e8",
-    background: "#dbeafe",
+    color: "#087f5b",
+    background: "#e7f5ec",
   },
 };
 
@@ -62,8 +62,8 @@ const statusStyles = {
     background: "#fef3c7",
   },
   "In Progress": {
-    color: "#6738f5",
-    background: "#ede9fe",
+    color: "#087f5b",
+    background: "#e7f5ec",
   },
   Completed: {
     color: "#15803d",
@@ -73,20 +73,20 @@ const statusStyles = {
 
 const categoryStyles = {
   Work: {
-    color: "#6738f5",
-    background: "#ede9fe",
+    color: "#087f5b",
+    background: "#e7f5ec",
   },
   Personal: {
-    color: "#1677e8",
-    background: "#dbeafe",
+    color: "#0f9f6e",
+    background: "#e2f5ee",
   },
   Learning: {
     color: "#15803d",
     background: "#dcfce7",
   },
   Health: {
-    color: "#db2777",
-    background: "#fce7f3",
+    color: "#15803d",
+    background: "#dcfce7",
   },
 };
 
@@ -139,8 +139,8 @@ function formatDueDate(dateString) {
 function getChipStyle(styles, value) {
   return (
     styles[value] || {
-      color: "#64748b",
-      background: "#f1f5f9",
+      color: "#64756a",
+      background: "#f1f8f3",
     }
   );
 }
@@ -154,7 +154,7 @@ function SummaryCard({ title, value, subtitle, icon, color }) {
         minWidth: 0,
         border: "1px solid",
         borderColor: "divider",
-        borderRadius: 3,
+        borderRadius: 0.5,
         height: "100%",
       }}
     >
@@ -187,7 +187,7 @@ function SummaryCard({ title, value, subtitle, icon, color }) {
               placeItems: "center",
               width: 38,
               height: 38,
-              borderRadius: 2,
+              borderRadius: 0.5,
               color,
               bgcolor: `${color}18`,
               flexShrink: 0,
@@ -413,7 +413,7 @@ export default function TasksPage({
             fontWeight={800}
             sx={{
               letterSpacing: "-1px",
-              fontSize: { xs: 25, md: 30 },
+              fontSize: { xs: 20, md: 25 },
             }}
           >
             My Tasks
@@ -433,10 +433,10 @@ export default function TasksPage({
           startIcon={<Plus size={18} />}
           onClick={() => navigate("/tasks/new")}
           sx={{
-            bgcolor: PURPLE,
-            borderRadius: 2,
-            px: 2.25,
-            py: 1.15,
+            bgcolor: BRAND_GREEN,
+            borderRadius: 0.5,
+            px: 1,
+            py: 0.5,
             fontWeight: 700,
             textTransform: "none",
             boxShadow: "none",
@@ -446,55 +446,11 @@ export default function TasksPage({
             },
           }}
         >
-          Add New Task
+          Add Task
         </Button>
       </Box>
 
-      {/* Summary cards */}
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "repeat(2, minmax(0, 1fr))",
-            lg: "repeat(4, minmax(0, 1fr))",
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <SummaryCard
-          title="Total Tasks"
-          value={stats.total}
-          subtitle="Tasks in your workspace"
-          icon={<ListTodo size={20} />}
-          color="#6738f5"
-        />
-
-        <SummaryCard
-          title="Pending"
-          value={stats.pending}
-          subtitle="Waiting to get started"
-          icon={<CircleDashed size={20} />}
-          color="#d97706"
-        />
-
-        <SummaryCard
-          title="In Progress"
-          value={stats.inProgress}
-          subtitle="Currently being worked on"
-          icon={<Clock3 size={20} />}
-          color="#1677e8"
-        />
-
-        <SummaryCard
-          title="Completed"
-          value={stats.completed}
-          subtitle="Successfully finished"
-          icon={<CheckCircle2 size={20} />}
-          color="#079669"
-        />
-      </Box>
-
+      
       {/* Search and filters */}
       <Card
         elevation={0}
@@ -503,7 +459,7 @@ export default function TasksPage({
           mb: 1,
           border: "1px solid",
           borderColor: "divider",
-          borderRadius: 3,
+          borderRadius: 0.5,
         }}
       >
         <Box
@@ -522,10 +478,10 @@ export default function TasksPage({
             onChange={(event) => setSearch(event.target.value)}
             sx={{
               flex: { xs: "1 1 100%", sm: "1 1 220px" },
-              maxWidth: { sm: 320 },
+              maxWidth: { sm: 170 },
               "& .MuiOutlinedInput-root": {
-                height: 35,
-                borderRadius: 2,
+                height: 30,
+                borderRadius: 0.5,
                 fontSize: 13,
               },
             }}
@@ -544,11 +500,11 @@ export default function TasksPage({
           <FormControl
             size="small"
             sx={{
-              minWidth: { xs: "calc(50% - 8px)", sm: 145 },
+              minWidth: { xs: "calc(50% - 8px)", sm: 100 },
               flexGrow: { xs: 1, sm: 0 },
               "& .MuiOutlinedInput-root": {
-                height: 35,
-                borderRadius: 2,
+                height: 30,
+                borderRadius: 0.5,
                 fontSize: 13,
               },
             }}
@@ -572,11 +528,11 @@ export default function TasksPage({
           <FormControl
             size="small"
             sx={{
-              minWidth: { xs: "calc(50% - 8px)", sm: 145 },
+              minWidth: { xs: "calc(50% - 8px)", sm: 100 },
               flexGrow: { xs: 1, sm: 0 },
               "& .MuiOutlinedInput-root": {
-                height: 35,
-                borderRadius: 2,
+                height: 30,
+                borderRadius: 0.5,
                 fontSize: 13,
               },
             }}
@@ -600,11 +556,11 @@ export default function TasksPage({
           <FormControl
             size="small"
             sx={{
-              minWidth: { xs: "100%", sm: 155 },
+              minWidth: { xs: "100%", sm: 120 },
               flexGrow: { xs: 1, sm: 0 },
               "& .MuiOutlinedInput-root": {
-                height: 35,
-                borderRadius: 2,
+                height: 30,
+                borderRadius: 0.5,
                 fontSize: 13,
               },
             }}
@@ -636,10 +592,10 @@ export default function TasksPage({
               onClick={resetFilters}
               sx={{
                 width: 35,
-                height: 35,
+                height: 30,
                 border: "1px solid",
                 borderColor: "divider",
-                borderRadius: 2,
+                borderRadius: 0.5,
               }}
             >
               <RotateCcw size={17} />
@@ -650,10 +606,10 @@ export default function TasksPage({
           <FormControl
             size="small"
             sx={{
-              minWidth: { xs: "100%", sm: 155 },
+              minWidth: { xs: "100%", sm: 120 },
               "& .MuiOutlinedInput-root": {
-                height: 35,
-                borderRadius: 2,
+                height: 30,
+                borderRadius: 0.5,
                 fontSize: 13,
               },
             }}
@@ -682,7 +638,7 @@ export default function TasksPage({
         sx={{
           border: "1px solid",
           borderColor: "divider",
-          borderRadius: 3,
+          borderRadius: 0.5,
           overflow: "hidden",
         }}
       >
@@ -812,7 +768,7 @@ export default function TasksPage({
                         sx={{
                           color: categoryStyle.color,
                           bgcolor: categoryStyle.background,
-                          borderRadius: 1.5,
+                          borderRadius: 0.5,
                           fontWeight: 700,
                           fontSize: 11,
                         }}
@@ -827,7 +783,7 @@ export default function TasksPage({
                         sx={{
                           color: priorityStyle.color,
                           bgcolor: priorityStyle.background,
-                          borderRadius: 1.5,
+                          borderRadius: 0.5,
                           fontWeight: 700,
                           fontSize: 11,
                         }}
@@ -846,7 +802,7 @@ export default function TasksPage({
                       >
                         <CalendarDays
                           size={15}
-                          color="#64748b"
+                          color="#64756a"
                         />
 
                         <Typography variant="body2">
@@ -872,7 +828,7 @@ export default function TasksPage({
                         sx={{
                           color: statusStyle.color,
                           bgcolor: statusStyle.background,
-                          borderRadius: 1.5,
+                          borderRadius: 0.5,
                           fontSize: 11,
                           fontWeight: 700,
                           whiteSpace: "nowrap",
@@ -898,7 +854,7 @@ export default function TasksPage({
                             width: 65,
                             height: 6,
                             overflow: "hidden",
-                            borderRadius: 10,
+                            borderRadius: 0.5,
                             bgcolor: "action.selected",
                           }}
                         >
@@ -906,12 +862,12 @@ export default function TasksPage({
                             sx={{
                               width: `${progress}%`,
                               height: "100%",
-                              borderRadius: 10,
+                              borderRadius: 0.5,
                               bgcolor:
                                 status === "Completed"
                                   ? "#079669"
                                   : status === "In Progress"
-                                    ? PURPLE
+                                    ? BRAND_GREEN
                                     : "#9ca3af",
                               transition: "width 250ms ease",
                             }}
@@ -943,7 +899,7 @@ export default function TasksPage({
                             aria-label={`Delete ${task.title}`}
                             onClick={() => handleDelete(task)}
                             sx={{
-                              color: "#1677e8",
+                              color: "#087f5b",
                               "&:hover": {
                                 color: "error.main",
                                 bgcolor: "action.hover",
@@ -979,7 +935,7 @@ export default function TasksPage({
                     >
                       <ListTodo
                         size={38}
-                        color="#94a3b8"
+                        color="#94a69a"
                       />
 
                       <Typography
@@ -1018,7 +974,7 @@ export default function TasksPage({
                           onClick={() => navigate("/tasks/new")}
                           sx={{
                             mt: 1,
-                            bgcolor: PURPLE,
+                            bgcolor: BRAND_GREEN,
                             textTransform: "none",
                             "&:hover": {
                               bgcolor: "#5526d9",
@@ -1038,42 +994,38 @@ export default function TasksPage({
 
         {/* Pagination */}
         <TablePagination
-          component="div"
-          count={filteredTasks.length}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(Number(event.target.value));
-            setPage(0);
-          }}
-          rowsPerPageOptions={[5, 10, 25]}
-          sx={{
-            borderTop: "1px solid",
-            borderColor: "divider",
-            "& .MuiTablePagination-toolbar": {
-              minHeight: 58,
-              flexWrap: "wrap",
-            },
-            "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
-              fontSize: 12,
-            },
-          }}
-        />
+  component="div"
+  count={filteredTasks.length}
+  page={page}
+  onPageChange={(_, newPage) => setPage(newPage)}
+  rowsPerPage={rowsPerPage}
+  onRowsPerPageChange={(event) => {
+    setRowsPerPage(Number(event.target.value));
+    setPage(0);
+  }}
+  rowsPerPageOptions={[5, 10, 25]}
+  sx={{
+    borderTop: '1px solid',
+    borderColor: 'divider',
+
+    '& .MuiTablePagination-toolbar': {
+      minHeight: 20,
+      flexWrap: 'wrap',
+      justifyContent: 'flex-end',
+    },
+
+    '& .MuiTablePagination-spacer': {
+      display: 'none',
+    },
+
+    '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
+      fontSize: 10,
+    },
+  }}
+/>
       </Card>
 
-      {/* Result count */}
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        sx={{
-          display: "block",
-          textAlign: "right",
-          mt: 1.5,
-        }}
-      >
-        Showing {filteredTasks.length} of {tasks.length} tasks
-      </Typography>
+      
     </Container>
   );
 }

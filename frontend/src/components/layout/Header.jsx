@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import taskFlowLogo from '../../assets/images/TaskFlow logo.png';
 
 import {
   Box,
@@ -15,7 +16,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import {
-  CheckSquare,
   LogOut,
   UserRound,
 } from 'lucide-react';
@@ -35,51 +35,92 @@ export default function Header({
   const [selectedLanguage, setSelectedLanguage] = useState(
     language || 'en'
   );
-  const [organization, setOrganization] = useState('TaskFlow Workspace');
+
   const [profileAnchor, setProfileAnchor] = useState(null);
 
-  const bg = darkMode ? '#0d1117' : '#ffffff';
-  const color = darkMode ? '#f0f6fc' : '#1f2937';
-  const muted = darkMode ? '#9ca3af' : '#64748b';
-  const border = darkMode ? '#30363d' : '#e5e7eb';
-  const softBlue = darkMode ? '#172554' : '#e0efff';
-  const iconBlue = '#0969da';
+  // Theme colors
+  const bg = darkMode ? '#07110d' : '#ffffff';
+  const color = darkMode ? '#f0f6f2' : '#1f2937';
+  const muted = darkMode ? '#a5b5aa' : '#64756a';
+  const border = darkMode ? '#263c30' : '#e2ebe4';
+  const softGreen = darkMode ? '#193527' : '#e7f5ec';
+  const hoverBg = darkMode ? '#254a35' : '#d5efdf';
+  const accentGreen = darkMode ? '#6ee7b7' : '#087f5b';
 
-  const displayName = username || 'there';
+  const displayName = username?.trim() || 'there';
 
+  // User initials
   const initials =
     displayName
-      .trim()
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 2)
       .map((part) => part[0].toUpperCase())
       .join('') || 'U';
 
+  // Language change
   const handleLanguageChange = (event) => {
     const value = event.target.value;
+
     setSelectedLanguage(value);
     setLanguage?.(value);
   };
 
+  // Shared styling for the language selector
   const selectSx = {
-    height: 34,
+    height: 30,
+    minWidth: 30,
     fontSize: 12,
     fontWeight: 600,
     color,
-    borderRadius: '7px',
+    bgcolor: softGreen,
+    borderRadius: '8px',
+    boxShadow: 'none',
+    transition: 'background-color 0.2s ease',
+
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'transparent',
+      border: 'none',
     },
+
+    '&:hover': {
+      bgcolor: hoverBg,
+      boxShadow: 'none',
+    },
+
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      border: 'none',
+    },
+
+    '&.Mui-focused': {
+      bgcolor: hoverBg,
+      boxShadow: 'none',
+    },
+
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      border: 'none',
+    },
+
     '& .MuiSelect-icon': {
-      color: iconBlue,
+      color: accentGreen,
       fontSize: 18,
     },
+
     '& .MuiSelect-select': {
       py: 0.75,
       pl: 1.25,
       pr: '28px !important',
     },
+  };
+
+  // Close profile menu
+  const closeProfile = () => {
+    setProfileAnchor(null);
+  };
+
+  // Sign out
+  const handleLogout = () => {
+    closeProfile();
+    onLogout?.();
   };
 
   return (
@@ -88,125 +129,195 @@ export default function Header({
       sx={{
         position: 'sticky',
         top: 0,
-        height: 50,
         zIndex: 1100,
         width: '100%',
+        minHeight: 45,
         bgcolor: bg,
         color,
         borderBottom: `1px solid ${border}`,
+        boxSizing: 'border-box',
+        transition: 'background-color 0.2s ease',
       }}
     >
+      {/* Main Header */}
       <Box
         sx={{
-          minHeight: 56,
-          px: { xs: 1.5, md: 2.5 },
+          minHeight: 45,
+          px: { xs: 1.25, sm: 1.5, md: 2.5 },
           display: 'flex',
           alignItems: 'center',
-          gap: { xs: 1, sm: 1.5 },
+          gap: { xs: 0.75, sm: 1.5 },
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
-        {/* TaskFlow logo */}
+        {/* TaskFlow Logo */}
         <Box
+          component="img"
+          src={taskFlowLogo}
+          alt="TaskFlow Logo"
           onClick={() => navigate('/dashboard')}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 36,
-            height: 40,
+            height: { xs: 30, sm: 38, md: 42 },
+            maxWidth: { xs: 100, sm: 145, md: 170 },
+            width: 'auto',
+            objectFit: 'contain',
+            display: 'block',
             flexShrink: 0,
             cursor: 'pointer',
           }}
-        >
-          <Box
-            sx={{
-              width: 34,
-              height: 34,
-              borderRadius: '50%',
-              bgcolor: '#e0f2fe',
-              display: 'grid',
-              placeItems: 'center',
-              border: '2px solid #38bdf8',
-            }}
-          >
-            <CheckSquare size={22} color="#0284c7" />
-          </Box>
-        </Box>
+        />
 
-        
-
-        {/* Welcome message */}
+        {/* Welcome Message */}
         <Typography
           sx={{
-            fontSize: { xs: 12, sm: 14 },
+            display: { xs: 'none', sm: 'block' },
+            fontSize: { sm: 12, md: 14 },
             fontWeight: 600,
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            ml: { sm: 1, md: 1.5 },
             mr: 'auto',
             minWidth: 0,
+            flex: 1,
           }}
         >
-          Welcome to {'  '}
+          Welcome to{' '}
           <Box
             component="span"
-            sx={{ color: iconBlue, fontWeight: 700 }}
+            sx={{
+              color: accentGreen,
+              fontWeight: 700,
+            }}
           >
             {displayName}
           </Box>
         </Typography>
-        <ThemeToggle
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          className="header-theme-toggle"
+
+        {/* Right-Side Controls */}
+        <Box
           sx={{
-            width: 30,
-            height: 30,
-            borderRadius: '8px',
-            color,
-            '&:hover': { bgcolor: softBlue },
-          }}
-        />
-        {/* Language */}
-        <Select
-          value={selectedLanguage}
-          onChange={handleLanguageChange}
-          size="small"
-          inputProps={{ 'aria-label': 'Select language' }}
-          sx={{
-            ...selectSx,
-            width: 30,
-            height: 30,
-            bgcolor: softBlue,
+            display: 'flex',
+            alignItems: 'center',
+            gap: { xs: 0.5, sm: 1 },
+            flexShrink: 0,
+            ml: 'auto',
           }}
         >
-          <MenuItem value="en">EN</MenuItem>
-          <MenuItem value="hi">HI</MenuItem>
-        </Select>
-
-        {/* Profile */}
-        <Tooltip title="Account">
-          <IconButton
-            aria-label="Account menu"
-            onClick={(e) => setProfileAnchor(e.currentTarget)}
-            sx={{
-              width: 36,
-              height: 36,
-              borderRadius: '8px',
-              bgcolor: softBlue,
-              color: iconBlue,
-              fontSize: 13,
-              fontWeight: 700,
-            }}
+          {/* Dark Mode Toggle */}
+          <Tooltip
+            title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {initials}
-          </IconButton>
-        </Tooltip>
+            <Box
+              sx={{
+                width: 30,
+                height: 30,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                bgcolor: softGreen,
+                border: 'none',
+                outline: 'none',
+                borderRadius: '8px',
+                transition: 'background-color 0.2s ease',
 
+                '&:hover': {
+                  bgcolor: hoverBg,
+                },
+              }}
+            >
+              <ThemeToggle
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+                className="header-theme-toggle"
+                sx={{
+                  width: 30,
+                  height: 30,
+                  minWidth: 30,
+                  p: 0,
+                  border: 'none',
+                  outline: 'none',
+                  boxShadow: 'none',
+                  borderRadius: '8px',
+                  color,
+                  bgcolor: 'transparent',
+                  transition: 'background-color 0.2s ease',
+
+                  '&:hover': {
+                    bgcolor: 'transparent',
+                    boxShadow: 'none',
+                  },
+
+                  '&.Mui-focusVisible': {
+                    outline: `2px solid ${accentGreen}`,
+                    outlineOffset: 2,
+                  },
+                }}
+              />
+            </Box>
+          </Tooltip>
+
+          {/* Language Selector */}
+          <Tooltip title="Select language">
+            <Select
+              value={selectedLanguage}
+              onChange={handleLanguageChange}
+              size="small"
+              inputProps={{
+                'aria-label': 'Select language',
+              }}
+              sx={selectSx}
+            >
+              <MenuItem value="en">EN</MenuItem>
+              <MenuItem value="hi">HI</MenuItem>
+            </Select>
+          </Tooltip>
+
+          {/* Profile Button */}
+          <Tooltip title="Account">
+            <IconButton
+              aria-label="Account menu"
+              onClick={(event) =>
+                setProfileAnchor(event.currentTarget)
+              }
+              sx={{
+                width: 30,
+                height: 30,
+                minWidth: 30,
+                p: 0,
+                flexShrink: 0,
+                border: 'none',
+                borderRadius: '8px',
+                bgcolor: softGreen,
+                color: accentGreen,
+                fontSize: 13,
+                fontWeight: 700,
+                boxShadow: 'none',
+                transition: 'background-color 0.2s ease',
+
+                '&:hover': {
+                  bgcolor: hoverBg,
+                  boxShadow: 'none',
+                },
+
+                '&.Mui-focusVisible': {
+                  outline: `2px solid ${accentGreen}`,
+                  outlineOffset: 2,
+                },
+              }}
+            >
+              {initials}
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        {/* Profile Menu */}
         <Menu
           anchorEl={profileAnchor}
           open={Boolean(profileAnchor)}
-          onClose={() => setProfileAnchor(null)}
+          onClose={closeProfile}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -224,17 +335,42 @@ export default function Header({
                 color,
                 border: `1px solid ${border}`,
                 borderRadius: '9px',
+                boxShadow: darkMode
+                  ? '0 8px 24px rgba(0,0,0,0.3)'
+                  : '0 8px 24px rgba(15,23,42,0.1)',
               },
             },
           }}
         >
-          <MenuItem disabled sx={{ opacity: '1 !important' }}>
-            <UserRound size={17} style={{ marginRight: 10 }} />
+          {/* User Information */}
+          <MenuItem
+            disabled
+            sx={{
+              opacity: '1 !important',
+              cursor: 'default',
+            }}
+          >
+            <UserRound
+              size={17}
+              style={{
+                marginRight: 10,
+                flexShrink: 0,
+              }}
+            />
+
             <Box>
-              <Typography fontSize={13} fontWeight={600} color={color}>
+              <Typography
+                fontSize={13}
+                fontWeight={600}
+                color={color}
+              >
                 {displayName}
               </Typography>
-              <Typography fontSize={11} color={muted}>
+
+              <Typography
+                fontSize={11}
+                color={muted}
+              >
                 Signed in
               </Typography>
             </Box>
@@ -242,12 +378,21 @@ export default function Header({
 
           <Divider sx={{ borderColor: border }} />
 
+          {/* Sign Out */}
           <MenuItem
-            onClick={() => {
-              setProfileAnchor(null);
-              onLogout?.();
+            onClick={handleLogout}
+            sx={{
+              color: '#ef4444',
+              gap: 1,
+              fontSize: 13,
+              borderRadius: '6px',
+              mx: 0.5,
+              my: 0.5,
+
+              '&:hover': {
+                bgcolor: darkMode ? '#351b23' : '#fef2f2',
+              },
             }}
-            sx={{ color: '#ef4444', gap: 1, fontSize: 13 }}
           >
             <LogOut size={17} />
             Sign out

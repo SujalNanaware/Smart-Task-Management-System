@@ -125,12 +125,25 @@ export default function App() {
       mode: darkMode ? "dark" : "light",
 
       primary: {
-        main: "#7054e8",
+        main: darkMode ? "#34d399" : "#0f9f6e",
+        light: darkMode ? "#6ee7b7" : "#34d399",
+        dark: darkMode ? "#059669" : "#087f5b",
       },
 
       background: {
-        default: darkMode ? "#0f172a" : "#f8fafc",
-        paper: darkMode ? "#1e293b" : "#ffffff",
+        default: darkMode ? "#07110d" : "#f4faf6",
+        paper: darkMode ? "#101d17" : "#ffffff",
+      },
+
+      text: {
+        primary: darkMode ? "#e5eee8" : "#14231b",
+        secondary: darkMode ? "#a5b5aa" : "#64756a",
+      },
+
+      divider: darkMode ? "#263c30" : "#e2ebe4",
+
+      success: {
+        main: darkMode ? "#34d399" : "#15803d",
       },
     },
 

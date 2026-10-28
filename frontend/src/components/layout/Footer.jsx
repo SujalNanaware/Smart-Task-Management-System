@@ -10,10 +10,10 @@ export default function Footer({ darkMode }) {
     <Box
       component="footer"
       sx={{
-        bgcolor: darkMode ? '#0d1117' : '#ffffff',
-        color: darkMode ? '#9198a1' : '#64748b',
+        bgcolor: darkMode ? '#07110d' : '#ffffff',
+        color: darkMode ? '#a5b5aa' : '#64756a',
         borderTop: '1px solid',
-        borderColor: darkMode ? '#30363d' : '#e5e7eb',
+        borderColor: darkMode ? '#263c30' : '#e2ebe4',
         py: 1.25,
         mt: 'auto',
       }}
@@ -33,14 +33,14 @@ export default function Footer({ darkMode }) {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
           <CheckSquare
             size={17}
-            color={darkMode ? '#38bdf8' : '#7054e8'}
+            color={darkMode ? '#34d399' : '#0f9f6e'}
           />
 
           <Typography
             sx={{
               fontSize: 13,
               fontWeight: 700,
-              color: darkMode ? '#f0f6fc' : '#29283e',
+              color: darkMode ? '#f0f6f2' : '#14231b',
             }}
           >
             TaskFlow
@@ -50,7 +50,7 @@ export default function Footer({ darkMode }) {
             component="span"
             sx={{
               fontSize: 12,
-              color: darkMode ? '#64748b' : '#cbd5e1',
+              color: darkMode ? '#718477' : '#b8c8bd',
               mx: 0.5,
             }}
           >
